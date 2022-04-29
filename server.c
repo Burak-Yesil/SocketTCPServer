@@ -5,12 +5,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
+
 
 int main()
 {
 
     char *ip = "127.0.0.1"; // local ip address used because both files are on the same machine
-    int port = 5565;        // Port number
+    int port = htons(5565);        // Port number
 
     int server_sock, client_sock;
     struct sockaddr_in server_addr, client_addr;
@@ -40,13 +44,34 @@ int main()
     printf("Success: Binded to port: %d\n", port);
 
     listen(server_sock, 5);
-    printf("Listening.../n");
+    printf("Listening...\n");
+
+    int total_sum = 0;
 
     while (1)
     {
         addr_size = sizeof(client_addr);
         client_sock = accept(server_sock, (struct sockaddr *)&client_addr, &addr_size);
-        printf("Success: Client connected\n");
+        printf("Success: Client connected\n"); //Connected to the client socket 
+        
+        
+        
+        
+        bzero(buffer, 1024); //Zeroing out the buffer
+        recv(client_sock, buffer, sizeof(buffer), 0);
+        printf("Client: %d+%s\n", total_sum, buffer);
+        
+
+   	total_sum = total_sum + atoi(buffer);
+        bzero(buffer, 1024);
+        sprintf(buffer, "%d", total_sum);
+        
+        printf("Server: %s\n", buffer);
+        send(client_sock, buffer, strlen(buffer),0);
+        
+        close(client_sock);
+        printf("Success: Client disconnected\n");
+        
     }
 
     return 0;
