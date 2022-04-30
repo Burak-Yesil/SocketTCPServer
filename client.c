@@ -13,6 +13,11 @@
 int main(int argc, char *argv[])
 {
 
+    if (argc != 2){
+    	perror("Error: Need a number as an argument");
+    	exit(1);
+    }
+
     char *ip = "127.0.0.1"; // local ip address used because both files are on the same machine
     int port = htons(5565);        // Port number
 
