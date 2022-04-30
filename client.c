@@ -18,8 +18,15 @@ int main(int argc, char *argv[])
     	exit(1);
     }
 
+    int inputtedPort = atoi(argv[1]);
+
+    if (inputtedPort <= 1023){
+        perror("Error: Port number must be greater than 1023");
+        exit(1);
+    }
+
     char *ip = "127.0.0.1"; // local ip address used because both files are on the same machine
-    int port = htons(5565);        // Port number
+    int port = htons(inputtedPort);        // Port number
 
     int sock;
     struct sockaddr_in addr;
@@ -44,13 +51,18 @@ int main(int argc, char *argv[])
     //printf("Success: Connected to the server\n");
 
 
+    while(1){
+        printf("Enter number:\n");
+        char number[1024];
+        fscanf(stdin, "%s", number);
+        printf("sending: %s\n", number);
+        send(sock, number, sizeof(number), 0);
+        bzero(buffer, 1024);
+        recv(sock, buffer, sizeof(buffer), 0);
+        printf("Server Total Sum: %s\n", buffer);
+    }
    
-    //printf("Client: %s\n", argv[1]);
-    send(sock, argv[1], sizeof(argv[1]), 0);
-    
-    bzero(buffer, 1024);
-    recv(sock, buffer, sizeof(buffer), 0);
-    printf("Server Total Sum: %s\n", buffer);
+   
 
     close(sock);
     //printf("Success: Disconnected from the server\n");
