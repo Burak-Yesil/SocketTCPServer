@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
         perror("Error: Socket error");
         exit(1);
     }
-    printf("Success: TCP server socket created\n");
+    //printf("Success: TCP server socket created\n");
 
     memset(&addr, 0, sizeof(addr));
     addr.sin_family = AF_INET;
@@ -41,19 +41,19 @@ int main(int argc, char *argv[])
     addr.sin_addr.s_addr = inet_addr(ip);
 
     connect(sock, (struct sockaddr *)&addr, sizeof(addr));
-    printf("Success: Connected to the server\n");
+    //printf("Success: Connected to the server\n");
 
 
    
-    printf("Client: %s\n", argv[1]);
-    send(sock, argv[1], 1, 0);
+    //printf("Client: %s\n", argv[1]);
+    send(sock, argv[1], sizeof(argv[1]), 0);
     
     bzero(buffer, 1024);
     recv(sock, buffer, sizeof(buffer), 0);
-    printf("Server: %s\n", buffer);
+    printf("Server Total Sum: %s\n", buffer);
 
     close(sock);
-    printf("Success: Disconnected from the server\n");
+    //printf("Success: Disconnected from the server\n");
 
     return 0;
 }
